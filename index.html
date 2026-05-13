@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>My Songbook</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="menu-view" class="view-section">
+        <header>
+            <a href="#" onclick="navigateTo('admin-view')" style="font-size: 20px;" title="Admin">⚙️</a>
+            <h1>🎸 My Songbook</h1>
+            <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search song or artist..." onkeyup="searchFilter()">
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterByType('all', this)">All</button>
+            <button class="filter-tab" onclick="filterByType('favorite', this)">Favorites ❤️</button>
+            <button class="filter-tab" onclick="filterByType('original', this)">Originals</button>
+            <button class="filter-tab" onclick="filterByType('cover', this)">Covers</button>
+        </div>
+
+        <div class="toolbar">
+            <div class="sort-tool">
+                <label>Sort by: </label>
+                <select id="sort-select" onchange="sortSongs()">
+                    <option value="popular">Most Played 🔥</option>
+                    <option value="title">Title (A-Z)</option>
+                    <option value="artist">Artist (A-Z)</option>
+                </select>
+            </div>
+            <div class="view-tool">
+                <button id="btn-grid" class="active" onclick="changeView('grid')">Grid</button>
+                <button id="btn-list" onclick="changeView('list')">List</button>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="songs-grid" id="songs-list-container"></div>
+        </div>
+    </div>
+
+    <div id="song-view" class="view-section hidden">
+        <div class="top-bar-song">
+            <a href="#" onclick="navigateTo('menu-view')">← Back</a>
+            <div>
+                <button class="theme-btn" onclick="deleteCurrentSong()" style="margin-right: 15px;" title="Delete Song">🗑️</button>
+                <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+            </div>
+        </div>
+
+        <div class="song-container" style="white-space: pre-wrap;">
+            <h2 id="display-title">Loading...</h2>
+            <div id="lyrics-container"></div>
+        </div>
+
+        <div class="control-bar">
+            <button id="btn-play" class="btn-main" onclick="toggleScroll()">Start</button>
+            <div class="control-group">
+                <span style="font-size:14px; font-weight:bold;">Key:</span>
+                <button class="btn-small" onclick="transposeChords(-1)">-½</button>
+                <button class="btn-small" onclick="transposeChords(1)">+½</button>
+            </div>
+
+<div class="control-group">
+    <span style="font-size:14px; font-weight:bold;">Text:</span>
+    <button class="btn-small" onclick="changeFontSize(-2)">A-</button>
+    <button class="btn-small" onclick="changeFontSize(2)">A+</button>
+</div>
+
+
+
+
+
+            <div class="control-group">
+                <span style="font-size:14px; font-weight:bold;">Spd:</span>
+                <button class="btn-small" style="background-color:#e67e22;" onclick="changeSpeed(-1)">-</button>
+                <span id="speed-text" style="font-size:16px; font-weight:bold; width:20px; text-align:center;">3</span>
+                <button class="btn-small" style="background-color:#e67e22;" onclick="changeSpeed(1)">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-view" class="view-section hidden">
+        <header>
+            <a href="#" onclick="navigateTo('menu-view')" style="font-size: 20px;">← Back</a>
+            <h1>🛠 Admin Panel</h1>
+            <div style="width: 30px;"></div>
+        </header>
+
+        <div class="admin-form">
+            <h2>Add New Song</h2>
+            <div class="field">
+                <label>Song Title</label>
+                <input type="text" id="admin-title" placeholder="e.g. Todavía">
+            </div>
+            <div class="field">
+                <label>Artist Name</label>
+                <input type="text" id="admin-artist" placeholder="e.g. Armando Manzanero">
+            </div>
+            <div class="field">
+                <label>Song Type</label>
+                <div class="toggle-group">
+                    <label>
+                        <input type="radio" name="song-type" value="cover" checked>
+                        <span>Cover</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="song-type" value="original">
+                        <span>Original</span>
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <label>Lyrics & Chords (Plain Text)</label>
+                <textarea id="admin-lyrics" placeholder="Paste your chords and lyrics here..."></textarea>
+            </div>
+            <button class="btn-save" onclick="saveNewSong()">Save Song to My Songbook</button>
+        </div>
+    </div>
+
+    <div id="chord-modal" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 class="modal-title" id="modal-title">C</h2>
+            <div id="diagram-container"></div>
+            <button class="modal-close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
