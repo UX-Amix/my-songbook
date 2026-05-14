@@ -1,7 +1,3 @@
-// =========================================
-// MY SONGBOOK - CORE LOGIC V4 (Editor & Translator)
-// =========================================
-
 const defaultSongs = [
     { id: "me-esta-doliendo", title: "Me Está Doliendo", artist: "Carin León", type: "cover", isFavorite: false, playCount: 0, lyrics: "G\nC  F\n  No quiero escribirle así que quítenme mi celular\nG  C                        G                Am\n Si saben bien cómo me pongo y me vuelven a invitar" }
 ];
@@ -20,7 +16,6 @@ function navigateTo(viewId, songId = null) {
 
     if (viewId !== 'song-view' && isScrolling) toggleScroll();
     
-    // Limpiar Admin si no estamos editando
     if (viewId === 'admin-view' && !editingSongId) {
         document.getElementById('admin-view-title').innerText = "🛠 Admin Panel";
         document.getElementById('form-subtitle').innerText = "Add New Song";
@@ -34,44 +29,7 @@ function navigateTo(viewId, songId = null) {
     else if (viewId === 'song-view' && songId) loadSong(songId);
 }
 
-// LÓGICA DE TRADUCCIÓN INTELIGENTE CORREGIDA (Sin la "i")
-function safeTranslateLatinChords(text) {
-    // Expresión regular EXACTA para mayúsculas o inicial mayúscula
-    const latinRegexStr = "\\b(DO|RE|MI|FA|SOL|LA|SI|Do|Re|Mi|Fa|Sol|La|Si)(#|b)?(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?=\\s|$|\\)|\\]|\\/|,)";
-    
-    // Para probar palabras sueltas sin los bordes
-    const latinTest = new RegExp("^(DO|RE|MI|FA|SOL|LA|SI|Do|Re|Mi|Fa|Sol|La|Si)(#|b)?(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\\/[A-G][#b]?)?$");
-    
-    const dicc = {
-        'Do':'C', 'Re':'D', 'Mi':'E', 'Fa':'F', 'Sol':'G', 'La':'A', 'Si':'B',
-        'DO':'C', 'RE':'D', 'MI':'E', 'FA':'F', 'SOL':'G', 'LA':'A', 'SI':'B'
-    };
-
-    return text.split('\n').map(line => {
-        let words = line.trim().split(/\s+/);
-        if (words.length === 0) return line;
-        
-        let possibleChords = 0;
-        words.forEach(w => {
-            let cleanW = w.replace(/[\(\)\[\],]/g, '');
-            // Buscamos si es un acorde anglo (C, D, Em) o un acorde latino EXACTO (Sol, LA)
-            if (/^([A-G][#b]?.*)$/i.test(cleanW) || latinTest.test(cleanW)) possibleChords++;
-        });
-
-        // Si casi la mitad de las palabras de esta línea son acordes (40%), entonces es musical
-        if ((possibleChords / words.length) >= 0.4) {
-            // Reemplazamos usando "g" (Global) pero SIN la "i", para que respete minúsculas
-            return line.replace(new RegExp(latinRegexStr, "g"), (match, nota, alt, mod) => {
-                let a = alt || '';
-                let m = mod || '';
-                return dicc[nota] + a + m;
-            });
-        }
-        return line; // Si es letra, la regresa intacta
-    }).join('\n');
-}
-
-// ADMIN PANEL: SAVE & UPDATE
+// ADMIN PANEL
 function saveNewSong() {
     const title = document.getElementById('admin-title').value.trim();
     const artist = document.getElementById('admin-artist').value.trim();
@@ -80,14 +38,9 @@ function saveNewSong() {
 
     if (!title || !artist || !lyrics) { alert("Please fill all fields"); return; }
 
-    // Traducir acordes antes de guardar
-    lyrics = safeTranslateLatinChords(lyrics);
-
     if (editingSongId) {
         let index = songDatabase.findIndex(s => s.id === editingSongId);
-        if(index !== -1) {
-            songDatabase[index] = { ...songDatabase[index], title, artist, lyrics, type };
-        }
+        if(index !== -1) songDatabase[index] = { ...songDatabase[index], title, artist, lyrics, type };
     } else {
         const id = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') + '-' + Date.now();
         songDatabase.push({ id, title, artist, lyrics, type, isFavorite: false, playCount: 0 });
@@ -149,7 +102,7 @@ function sortSongs() {
     cards.forEach(c => container.appendChild(c));
 }
 
-// SONG VIEWER (Ahora con Traductor Visual Integrado)
+// SONG VIEWER & SMART LATIN TRANSLATOR
 function loadSong(id) {
     const song = songDatabase.find(s => s.id === id);
     if (!song) return;
@@ -160,7 +113,6 @@ function loadSong(id) {
     const lyricsBox = document.getElementById('lyrics-container');
     lyricsBox.style.fontSize = currentFontSize + "px";
 
-    // Detectores que leen tanto Anglo (C) como Latino (DO, Re)
     const testChord = /^([A-G][#b]?|DO|RE|MI|FA|SOL|LA|SI)(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\/[A-G][#b]?)?$/i;
     const replaceRegex = /(^|\s|\(|\[)([A-G][#b]?|DO|RE|MI|FA|SOL|LA|SI)((?:m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\/[A-G][#b]?)?)(?=\s|$|\)|\]|,)/gi;
     const dicc = {'do':'C', 're':'D', 'mi':'E', 'fa':'F', 'sol':'G', 'la':'A', 'si':'B'};
@@ -168,25 +120,21 @@ function loadSong(id) {
     lyricsBox.innerHTML = song.lyrics.split('\n').map(line => {
         let words = line.trim().split(/\s+/);
         if (words.length === 0) return line;
-
-        // ¿Cuántas palabras parecen acordes?
         let chordCount = words.filter(w => testChord.test(w.replace(/[\(\)\[\],]/g,''))).length;
         
-        // Si más del 30% de la línea son acordes, aplicamos la magia
         if (chordCount / words.length >= 0.3) {
             return line.replace(replaceRegex, (match, prefix, root, suffix) => {
-                // Traduce si es latino, o lo deja igual si ya era anglo
                 let angloRoot = dicc[root.toLowerCase()] || (root.charAt(0).toUpperCase() + root.slice(1));
                 return `${prefix}<span class="chord">${angloRoot}${suffix}</span>`;
             });
         }
-        return line; // Si es letra de la canción, ni la tocamos
+        return line;
     }).join('\n');
 
     document.querySelectorAll('.chord').forEach(s => s.onclick = function() { showDiagram(this.innerText); });
 }
 
-// HELPERS (Font, Theme, Scroll, Transpose, Modal)
+// HELPERS
 function changeFontSize(d) { currentFontSize = Math.min(40, Math.max(14, currentFontSize + d)); document.getElementById('lyrics-container').style.fontSize = currentFontSize + "px"; }
 function toggleTheme() { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode')?'dark':'light'); }
 function searchFilter() { let q = document.getElementById('search-bar').value.toLowerCase(); document.querySelectorAll('.card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(q)?"":"none"); }
@@ -203,36 +151,23 @@ const scale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 function transposeChords(s) { document.querySelectorAll('.chord').forEach(span => { let m = span.innerText.match(/^([CDEFGAB][#b]?)(.*)$/i); if(m) { let idx = scale.indexOf(m[1].toUpperCase().replace('DB','C#').replace('EB','D#').replace('GB','F#').replace('AB','G#').replace('BB','A#')); if(idx!==-1) span.innerText = scale[(idx+s+12)%12] + m[2]; } }); }
 
 const chordDictionary = { 'C':[-1,3,2,0,1,0], 'Cm':[-1,3,5,5,4,3], 'D':[-1,-1,0,2,3,2], 'Dm':[-1,-1,0,2,3,1], 'E':[0,2,2,1,0,0], 'Em':[0,2,2,0,0,0], 'F':[1,3,3,2,1,1], 'G':[3,2,0,0,0,3], 'A':[-1,0,2,2,2,0], 'Am':[-1,0,2,2,1,0], 'B':[-1,2,4,4,4,2], 'Bm':[-1,2,4,4,3,2] };
-// DIBUJAR DIAGRAMA DE ACORDES (FIX)
+
 function showDiagram(c) {
-    let clean = c.trim(); 
-    document.getElementById('modal-title').innerText = clean;
+    let clean = c.trim(); document.getElementById('modal-title').innerText = clean;
     const cont = document.getElementById('diagram-container');
     let p = chordDictionary[clean];
-    
-   if(!p) {
-        // Mejoramos el mensaje de No Disponible
+    if(!p) {
         cont.innerHTML = "<p style='margin-top:40px; margin-bottom:40px; color:#888; font-style:italic;'>Diagram N/A</p>";
-    } else  {
+    } else {
         let html = '<div class="open-strings">' + p.map(x => x===-1?'X':x===0?'O':'&nbsp;').join('') + '</div><div class="fretboard">';
-        
-        // 🔥 ESTA ERA LA MAGIA QUE FALTABA: LAS 6 CUERDAS VERTICALES
         html += '<div class="string-lines">';
         for(let i=0; i<6; i++) html += '<div class="string-line"></div>';
         html += '</div>';
-        
-        // Dibuja los trastes horizontales
         for(let i=0; i<4; i++) html += '<div class="fret"></div>';
-        
-        // Dibuja los puntos rojos
-        p.forEach((v,i) => { 
-            if(v>0) html += `<div class="dot" style="top:${(v-0.5)*25}%; left:${i*20}%"></div>`; 
-        });
-        
+        p.forEach((v,i) => { if(v>0) html += `<div class="dot" style="top:${(v-0.5)*25}%; left:${i*20}%"></div>`; });
         cont.innerHTML = html + '</div>';
     }
     document.getElementById('chord-modal').style.display = 'flex';
-}
 }
 function closeModal() { document.getElementById('chord-modal').style.display = 'none'; }
 document.addEventListener('DOMContentLoaded', () => { if(localStorage.getItem('theme')==='dark') toggleTheme(); navigateTo('menu-view'); });
