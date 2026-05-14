@@ -52,12 +52,13 @@
         <div class="top-bar-song">
             <a href="#" onclick="navigateTo('menu-view')">← Back</a>
             <div>
+                <button class="theme-btn" onclick="editCurrentSong()" style="margin-right: 15px;" title="Edit Song">✏️</button>
                 <button class="theme-btn" onclick="deleteCurrentSong()" style="margin-right: 15px;" title="Delete Song">🗑️</button>
                 <button class="theme-btn" onclick="toggleTheme()">🌙</button>
             </div>
         </div>
 
-        <div class="song-container" style="white-space: pre-wrap;">
+        <div class="song-container">
             <h2 id="display-title">Loading...</h2>
             <div id="lyrics-container"></div>
         </div>
@@ -65,23 +66,17 @@
         <div class="control-bar">
             <button id="btn-play" class="btn-main" onclick="toggleScroll()">Start</button>
             <div class="control-group">
-                <span style="font-size:14px; font-weight:bold;">Key:</span>
+                <span style="font-size:12px; font-weight:bold;">Text:</span>
+                <button class="btn-small" onclick="changeFontSize(-2)">A-</button>
+                <button class="btn-small" onclick="changeFontSize(2)">A+</button>
+            </div>
+            <div class="control-group">
+                <span style="font-size:12px; font-weight:bold;">Key:</span>
                 <button class="btn-small" onclick="transposeChords(-1)">-½</button>
                 <button class="btn-small" onclick="transposeChords(1)">+½</button>
             </div>
-
-<div class="control-group">
-    <span style="font-size:14px; font-weight:bold;">Text:</span>
-    <button class="btn-small" onclick="changeFontSize(-2)">A-</button>
-    <button class="btn-small" onclick="changeFontSize(2)">A+</button>
-</div>
-
-
-
-
-
             <div class="control-group">
-                <span style="font-size:14px; font-weight:bold;">Spd:</span>
+                <span style="font-size:12px; font-weight:bold;">Spd:</span>
                 <button class="btn-small" style="background-color:#e67e22;" onclick="changeSpeed(-1)">-</button>
                 <span id="speed-text" style="font-size:16px; font-weight:bold; width:20px; text-align:center;">3</span>
                 <button class="btn-small" style="background-color:#e67e22;" onclick="changeSpeed(1)">+</button>
@@ -92,12 +87,12 @@
     <div id="admin-view" class="view-section hidden">
         <header>
             <a href="#" onclick="navigateTo('menu-view')" style="font-size: 20px;">← Back</a>
-            <h1>🛠 Admin Panel</h1>
+            <h1 id="admin-view-title">🛠 Admin Panel</h1>
             <div style="width: 30px;"></div>
         </header>
 
         <div class="admin-form">
-            <h2>Add New Song</h2>
+            <h2 id="form-subtitle">Add New Song</h2>
             <div class="field">
                 <label>Song Title</label>
                 <input type="text" id="admin-title" placeholder="e.g. Todavía">
