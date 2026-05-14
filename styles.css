@@ -58,7 +58,7 @@ header a { color: white; text-decoration: none; font-weight: bold; }
     display: flex; justify-content: space-between; align-items: center;
 }
 .sort-tool select { padding: 8px; border-radius: 8px; background: var(--card-bg); color: var(--text-color); }
-.view-tool button { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; }
+.view-tool button { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; color: black; }
 .view-tool button.active { background: #2ecc71; color: black; }
 
 /* TARJETAS */
@@ -120,9 +120,18 @@ header a { color: white; text-decoration: none; font-weight: bold; }
 .field { margin-bottom: 20px; }
 .field label { display: block; font-weight: bold; margin-bottom: 8px; }
 .field input[type="text"], .field textarea {
-    width: 100%; height: 100px; padding: 12px; border-radius: 8px; border: 1px solid #ccc;
+    width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;
     background: var(--bg-color); color: var(--text-color); box-sizing: border-box;
 }
+
+/* Altura específica y fuente para los acordes */
+.field textarea {
+    height: 250px;
+    resize: vertical; /* Deja que el usuario lo estire hacia abajo si la canción es muy larga */
+    font-family: 'Courier New', monospace; /* Súper importante para que los acordes se alineen bien con las palabras */
+    line-height: 1.5;
+}
+
 
 .toggle-group {
     display: flex; background: var(--bg-color); padding: 5px; border-radius: 50px; border: 1px solid #ccc; align-items: center;
@@ -174,4 +183,9 @@ header a { color: white; text-decoration: none; font-weight: bold; }
 
 .btn-save:hover {
     background: #27ae60;
+}
+
+.badge-cover { 
+    background: #0056B3; /* Un azul fuerte y súper accesible */
+    color: #FFFFFF; 
 }
