@@ -210,9 +210,10 @@ function showDiagram(c) {
     const cont = document.getElementById('diagram-container');
     let p = chordDictionary[clean];
     
-    if(!p) {
-        cont.innerHTML = "<p style='margin-top:20px; color:#888;'>Diagram N/A</p>";
-    } else {
+   if(!p) {
+        // Mejoramos el mensaje de No Disponible
+        cont.innerHTML = "<p style='margin-top:40px; margin-bottom:40px; color:#888; font-style:italic;'>Diagram N/A</p>";
+    } else  {
         let html = '<div class="open-strings">' + p.map(x => x===-1?'X':x===0?'O':'&nbsp;').join('') + '</div><div class="fretboard">';
         
         // 🔥 ESTA ERA LA MAGIA QUE FALTABA: LAS 6 CUERDAS VERTICALES
