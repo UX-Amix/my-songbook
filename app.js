@@ -149,7 +149,7 @@ function sortSongs() {
     cards.forEach(c => container.appendChild(c));
 }
 
-// SONG VIEWER
+// SONG VIEWER (Ahora con Traductor Visual Integrado)
 function loadSong(id) {
     const song = songDatabase.find(s => s.id === id);
     if (!song) return;
@@ -160,12 +160,27 @@ function loadSong(id) {
     const lyricsBox = document.getElementById('lyrics-container');
     lyricsBox.style.fontSize = currentFontSize + "px";
 
-    const chordRegex = /(^|\s|\(|\[)([A-G][#b]?(?:m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\/[A-G][#b]?)?)(?=\s|$|\)|\]|,)/gi;
+    // Detectores que leen tanto Anglo (C) como Latino (DO, Re)
+    const testChord = /^([A-G][#b]?|DO|RE|MI|FA|SOL|LA|SI)(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\/[A-G][#b]?)?$/i;
+    const replaceRegex = /(^|\s|\(|\[)([A-G][#b]?|DO|RE|MI|FA|SOL|LA|SI)((?:m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\/[A-G][#b]?)?)(?=\s|$|\)|\]|,)/gi;
+    const dicc = {'do':'C', 're':'D', 'mi':'E', 'fa':'F', 'sol':'G', 'la':'A', 'si':'B'};
+
     lyricsBox.innerHTML = song.lyrics.split('\n').map(line => {
-        if (line.trim().split(/\s+/).filter(w => /^([A-G][#b]?.*)$/i.test(w.replace(/[\(\)\[\],]/g,''))).length / line.trim().split(/\s+/).length >= 0.3) {
-            return line.replace(chordRegex, '$1<span class="chord">$2</span>');
+        let words = line.trim().split(/\s+/);
+        if (words.length === 0) return line;
+
+        // ¿Cuántas palabras parecen acordes?
+        let chordCount = words.filter(w => testChord.test(w.replace(/[\(\)\[\],]/g,''))).length;
+        
+        // Si más del 30% de la línea son acordes, aplicamos la magia
+        if (chordCount / words.length >= 0.3) {
+            return line.replace(replaceRegex, (match, prefix, root, suffix) => {
+                // Traduce si es latino, o lo deja igual si ya era anglo
+                let angloRoot = dicc[root.toLowerCase()] || (root.charAt(0).toUpperCase() + root.slice(1));
+                return `${prefix}<span class="chord">${angloRoot}${suffix}</span>`;
+            });
         }
-        return line;
+        return line; // Si es letra de la canción, ni la tocamos
     }).join('\n');
 
     document.querySelectorAll('.chord').forEach(s => s.onclick = function() { showDiagram(this.innerText); });
