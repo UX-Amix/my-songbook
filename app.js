@@ -34,28 +34,40 @@ function navigateTo(viewId, songId = null) {
     else if (viewId === 'song-view' && songId) loadSong(songId);
 }
 
-// LÓGICA DE TRADUCCIÓN INTELIGENTE (SOL -> G)
+// LÓGICA DE TRADUCCIÓN INTELIGENTE CORREGIDA (Sin la "i")
 function safeTranslateLatinChords(text) {
-    const latinRegexStr = "(DO|RE|MI|FA|SOL|LA|SI|Do|Re|Mi|Fa|Sol|La|Si)(#|b)?(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\\/[A-G][#b]?)?";
-    const latinTest = new RegExp("^" + latinRegexStr + "$", "i");
-    const dicc = {'do':'C', 're':'D', 'mi':'E', 'fa':'F', 'sol':'G', 'la':'A', 'si':'B'};
+    // Expresión regular EXACTA para mayúsculas o inicial mayúscula
+    const latinRegexStr = "\\b(DO|RE|MI|FA|SOL|LA|SI|Do|Re|Mi|Fa|Sol|La|Si)(#|b)?(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?=\\s|$|\\)|\\]|\\/|,)";
+    
+    // Para probar palabras sueltas sin los bordes
+    const latinTest = new RegExp("^(DO|RE|MI|FA|SOL|LA|SI|Do|Re|Mi|Fa|Sol|La|Si)(#|b)?(m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\\/[A-G][#b]?)?$");
+    
+    const dicc = {
+        'Do':'C', 'Re':'D', 'Mi':'E', 'Fa':'F', 'Sol':'G', 'La':'A', 'Si':'B',
+        'DO':'C', 'RE':'D', 'MI':'E', 'FA':'F', 'SOL':'G', 'LA':'A', 'SI':'B'
+    };
 
     return text.split('\n').map(line => {
         let words = line.trim().split(/\s+/);
         if (words.length === 0) return line;
+        
         let possibleChords = 0;
         words.forEach(w => {
             let cleanW = w.replace(/[\(\)\[\],]/g, '');
+            // Buscamos si es un acorde anglo (C, D, Em) o un acorde latino EXACTO (Sol, LA)
             if (/^([A-G][#b]?.*)$/i.test(cleanW) || latinTest.test(cleanW)) possibleChords++;
         });
-        // Si la línea es musical, reemplazamos notas latinas por anglas
-        if ((possibleChords / words.length) >= 0.3) {
-            return line.replace(new RegExp(latinRegexStr, "gi"), (match, nota) => {
-                let suffix = match.substring(nota.length);
-                return dicc[nota.toLowerCase()] + suffix;
+
+        // Si casi la mitad de las palabras de esta línea son acordes (40%), entonces es musical
+        if ((possibleChords / words.length) >= 0.4) {
+            // Reemplazamos usando "g" (Global) pero SIN la "i", para que respete minúsculas
+            return line.replace(new RegExp(latinRegexStr, "g"), (match, nota, alt, mod) => {
+                let a = alt || '';
+                let m = mod || '';
+                return dicc[nota] + a + m;
             });
         }
-        return line;
+        return line; // Si es letra, la regresa intacta
     }).join('\n');
 }
 
