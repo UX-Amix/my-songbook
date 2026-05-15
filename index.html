@@ -52,14 +52,24 @@
         <div class="top-bar-song">
             <a href="#" onclick="navigateTo('menu-view')">← Back</a>
             <div>
-                <button class="theme-btn" onclick="deleteCurrentSong()" style="margin-right: 15px;" title="Delete Song">🗑️</button>
+                <button onclick="toggleEditMode()" title="Edit Song">✏️</button>
+                <button onclick="deleteCurrentSong()" title="Delete">🗑️</button>
                 <button class="theme-btn" onclick="toggleTheme()">🌙</button>
             </div>
         </div>
 
         <div class="song-container" style="white-space: pre-wrap;">
             <h2 id="display-title">Loading...</h2>
+            
             <div id="lyrics-container"></div>
+
+            <div id="edit-container" class="hidden">
+                <textarea id="edit-lyrics" class="edit-textarea"></textarea>
+                <div class="edit-actions">
+                    <button onclick="saveEdit()" class="btn-save" style="margin-top: 0;">Save Changes</button>
+                    <button onclick="cancelEdit()" class="btn-cancel">Cancel</button>
+                </div>
+            </div>
         </div>
 
         <div class="control-bar">
@@ -70,15 +80,11 @@
                 <button class="btn-small" onclick="transposeChords(1)">+½</button>
             </div>
 
-<div class="control-group">
-    <span style="font-size:14px; font-weight:bold;">Text:</span>
-    <button class="btn-small" onclick="changeFontSize(-2)">A-</button>
-    <button class="btn-small" onclick="changeFontSize(2)">A+</button>
-</div>
-
-
-
-
+            <div class="control-group">
+                <span style="font-size:14px; font-weight:bold;">Text:</span>
+                <button class="btn-small" onclick="changeFontSize(-2)">A-</button>
+                <button class="btn-small" onclick="changeFontSize(2)">A+</button>
+            </div>
 
             <div class="control-group">
                 <span style="font-size:14px; font-weight:bold;">Spd:</span>
