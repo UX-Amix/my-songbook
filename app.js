@@ -1,5 +1,5 @@
 // =========================================
-// MY SONGBOOK - CORE LOGIC V4 (Smart Dark Mode Edition)
+// MY SONGBOOK - CORE LOGIC V4.1 (Bug Fix Edition)
 // =========================================
 
 const defaultSongs = [
@@ -17,7 +17,6 @@ if (!songDatabase) {
     songDatabase = songDatabase.map(song => ({
         ...song,
         isFavorite: song.isFavorite !== undefined ? song.isFavorite : false,
-        songType: song.songType !== undefined ? song.songType : song.type, // Fallback de herencia
         playCount: song.playCount !== undefined ? song.playCount : 0,
         type: song.type || 'cover'
     }));
@@ -36,7 +35,7 @@ function navigateTo(viewId, songId = null) {
     document.getElementById(viewId).classList.remove('hidden');
     window.scrollTo(0, 0);
     
-    // UX Fix: Asegurar que el panel de ajustes se cierre al salir de la canción
+    // Cierra el panel de ajustes al salir de la canción
     const settingsPanel = document.getElementById('settings-panel');
     if (settingsPanel) settingsPanel.classList.remove('open');
 
@@ -65,6 +64,7 @@ function toggleFavorite(songId, event) {
 
 function renderMenu() {
     const container = document.getElementById('songs-list-container');
+    if (!container) return; // Fail-safe
     container.innerHTML = '';
     let songsToRender = songDatabase;
     if (currentTypeFilter === 'favorite') songsToRender = songDatabase.filter(song => song.isFavorite);
@@ -98,6 +98,7 @@ function changeView(viewType) {
 
 function sortSongs() {
     const container = document.getElementById('songs-list-container');
+    if (!container) return;
     const cards = Array.from(container.getElementsByClassName('card'));
     const criteria = document.getElementById('sort-select').value;
     cards.sort((a, b) => {
@@ -110,26 +111,22 @@ function sortSongs() {
     cards.forEach(c => container.appendChild(c));
 }
 
-// ADMIN PANEL: TRADUCTOR INTELIGENTE
+// ADMIN PANEL
 function normalizeLyrics(text) {
     const latinToAmerican = {
         'DO': 'C', 'RE': 'D', 'MI': 'E', 'FA': 'F', 
         'SOL': 'G', 'LA': 'A', 'SI': 'B'
     };
-
     let lines = text.split('\n');
     let processedLines = lines.map(line => {
         let words = line.trim().split(/\s+/);
         if(words.length === 0) return line;
-        
         let chordCount = 0;
         const chordTestRegex = /^(DO|RE|MI|FA|SOL|LA|SI|C|D|E|F|G|A|B)[#b]?(m|min|maj|dim|aug|sus|add|[\d\/\w]*)*$/i;
-        
         words.forEach(w => {
             let cleanW = w.replace(/[\(\)\[\],]/g, '');
             if (chordTestRegex.test(cleanW)) chordCount++;
         });
-
         if ((chordCount / words.length) >= 0.3) {
             let parts = line.split(/(\s+)/); 
             let translatedParts = parts.map(part => {
@@ -169,7 +166,7 @@ function saveNewSong() {
     navigateTo('menu-view');
 }
 
-// SONG VIEWER
+// SONG VIEWER (FIXED FOR NEW HTML 🛠️)
 function loadSong(songId) {
     const song = songDatabase.find(s => s.id === songId);
     if (!song) return;
@@ -177,20 +174,21 @@ function loadSong(songId) {
     localStorage.setItem('mySongbookDB', JSON.stringify(songDatabase));
     currentSongId = songId;
     
-    // Inyección de título y artista estructurado
-    document.getElementById('display-title').innerText = song.title;
-    document.getElementById('display-artist').innerText = song.artist;
+    // FIX: Separar la inyección del título y artista para que coincida con tu estructura expandible
+    const titleEl = document.getElementById('display-title');
+    const artistEl = document.getElementById('display-artist');
+    if (titleEl) titleEl.innerText = song.title;
+    if (artistEl) artistEl.innerText = song.artist;
     
     const lyricsContainer = document.getElementById('lyrics-container');
-    lyricsContainer.style.fontSize = currentFontSize + "px";
-
-    // UX FIX: Inyectar dinámicamente la clase correspondiente al tipo de canción
-    // Esto es lo que activa la magia de colores lila/melocotón en CSS exclusivamente en Dark Mode
-    lyricsContainer.className = ''; // Resetear clases previas
-    if (song.type === 'original') {
-        lyricsContainer.classList.add('song-original');
-    } else {
-        lyricsContainer.classList.add('song-cover');
+    if (lyricsContainer) {
+        lyricsContainer.style.fontSize = currentFontSize + "px";
+        lyricsContainer.className = ''; 
+        if (song.type === 'original') {
+            lyricsContainer.classList.add('song-original');
+        } else {
+            lyricsContainer.classList.add('song-cover');
+        }
     }
 
     const chordRegexStr = "^([A-G][#b]?(?:m|M|maj|maj7|dim|dis|fadis|sus|sus4|4|7|74|-7|maj7)?(?:\\/[A-G][#b]?)?)$";
@@ -207,8 +205,10 @@ function loadSong(songId) {
         return line;
     }).join('\n');
 
-    lyricsContainer.innerHTML = formattedLyrics;
-    document.querySelectorAll('.chord').forEach(span => { span.onclick = function() { showDiagram(this.innerText); }; });
+    if (lyricsContainer) {
+        lyricsContainer.innerHTML = formattedLyrics;
+        document.querySelectorAll('.chord').forEach(span => { span.onclick = function() { showDiagram(this.innerText); }; });
+    }
 }
 
 function deleteCurrentSong() {
@@ -220,21 +220,17 @@ function deleteCurrentSong() {
 function toggleEditMode() {
     const song = songDatabase.find(s => s.id === currentSongId);
     if (!song) return;
-    
     document.getElementById('lyrics-container').classList.add('hidden');
     document.getElementById('edit-container').classList.remove('hidden');
     document.getElementById('edit-lyrics').value = song.lyrics;
 }
-
 function cancelEdit() {
     document.getElementById('edit-container').classList.add('hidden');
     document.getElementById('lyrics-container').classList.remove('hidden');
 }
-
 function saveEdit() {
     const newLyrics = document.getElementById('edit-lyrics').value;
     const song = songDatabase.find(s => s.id === currentSongId);
-    
     if (song) {
         song.lyrics = normalizeLyrics(newLyrics);
         localStorage.setItem('mySongbookDB', JSON.stringify(songDatabase));
@@ -258,13 +254,10 @@ function loadTheme() {
         document.querySelectorAll('button[onclick="toggleTheme()"]').forEach(btn => btn.innerHTML = '<i class="fa-solid fa-sun"></i>'); 
     }
 }
-
 function toggleTheme() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    
-    // Sincroniza los íconos globales con las fuentes de FontAwesome instaladas
     document.querySelectorAll('button[onclick="toggleTheme()"]').forEach(btn => {
         btn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
     });
@@ -273,10 +266,10 @@ function toggleTheme() {
 // AUTOSCROLL SYSTEM
 let isScrolling = false; let speedLevel = 3; let scrollSpeed = speedLevel * 0.15; let animationId; let positionY = 0; 
 function animateScroll() { if (isScrolling) { positionY += scrollSpeed; window.scrollTo(0, positionY); if (Math.abs(window.scrollY - positionY) > 5) positionY = window.scrollY; animationId = requestAnimationFrame(animateScroll); } }
-
 function toggleScroll() { 
     isScrolling = !isScrolling; 
     const playBtn = document.getElementById('btn-play'); 
+    if (!playBtn) return;
     if (isScrolling) { 
         playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>'; 
         playBtn.classList.add("paused"); 
@@ -288,19 +281,12 @@ function toggleScroll() {
         cancelAnimationFrame(animationId); 
     } 
 }
-
-function changeSpeed(change) { 
-    speedLevel += change; 
-    if (speedLevel < 1) speedLevel = 1; 
-    if (speedLevel > 10) speedLevel = 10; 
-    document.getElementById('speed-text').innerText = speedLevel; 
-    scrollSpeed = speedLevel * 0.15; 
-}
+function changeSpeed(change) { speedLevel += change; if (speedLevel < 1) speedLevel = 1; if (speedLevel > 10) speedLevel = 10; document.getElementById('speed-text').innerText = speedLevel; scrollSpeed = speedLevel * 0.15; }
 
 const scale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 function transposeChords(steps) { document.querySelectorAll('.chord').forEach(span => { let match = span.innerText.match(/^([CDEFGAB][#b]?)(.*)$/i); if (match) { let note = match[1].toUpperCase().replace('DB','C#').replace('EB','D#').replace('GB','F#').replace('AB','G#').replace('BB','A#'); let idx = scale.indexOf(note); if (idx !== -1) span.innerText = scale[(idx + steps + 12) % 12] + match[2]; } }); }
 
-// FRETS DICTIONARY & MODAL DIAGRAMS
+// FRETS DICTIONARY
 const chordDictionary = {
     'C': [-1,3,2,0,1,0], 'Cm': [-1,3,5,5,4,3], 'C7': [-1,3,2,3,1,0], 'C#': [-1,4,6,6,6,4], 'C#m': [-1,4,6,6,5,4], 'C#m7': [-1,4,6,4,5,4],
     'D': [-1,-1,0,2,3,2], 'Dm': [-1,-1,0,2,3,1], 'D7': [-1,-1,0,2,1,2], 'D#': [-1,6,8,8,8,6], 'D#m': [-1,6,8,8,7,6], 'D/F#': [2,0,0,2,3,2],
