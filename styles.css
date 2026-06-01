@@ -1,399 +1,475 @@
-/* ==========================================================================
-   VARIABLES DE CONTROL (Aquí ajustas tus colores manualmente Erika 🎨)
-   ========================================================================== */
+/* =========================================
+   VARIABLES Y BASE (Actualizado Neo-Brutalista)
+   ========================================= */
 :root {
-  /* ☀️ MODO CLARO - Estilo Neo-Brutalista Puro */
-  --bg-app: #F3F0DF;          /* Fondo crema general */
-  --bg-card: #FFFFFF;         /* Fondo blanco de tarjetas */
-  --text-main: #000000;       /* Texto negro principal */
-  --border-color: #000000;    /* Bordes negros gruesos */
-  --shadow-color: #000000;    /* Sombra rígida brutalista */
-  --lyrics-bg: #FFFFFF;       /* Fondo del cuadro de la letra */
-  
-  /* Acentos de Marca Coherentes */
-  --accent-lime: #D1FF52;     /* Tu verde lima eléctrico */
-  --color-cover: #BF94FF;     /* Tu lila hermoso de portadas/tags */
-  --color-original: #FFA984;  /* Tu melocotón / naranja pastel */
-  --color-basil: #376F1B;     /* Tu nuevo verde profundo albahaca */
-  
-  /* Acordes en Modo Claro */
-  --chord-color: #376F1B;     /* Verdes legibles sobre fondo blanco */
+    /* ☀️ MODO CLARO - Estilo Rudo e Impactante */
+    --bg-color: #f4f7f6;
+    --text-color: #2c3e50;
+    --card-bg: #ffffff;
+    --header-bg: #1a1a2e;
+    
+    /* Acentos de Marca (Tus HEX de Figma) */
+    --accent-lime: #D1FF52;     /* Verde lima para FABs y activos */
+    --color-cover: #BF94FF;     /* Lila para portadas y acordes cover */
+    --color-original: #FFA984;  /* Melocotón para portadas y acordes original */
+    --color-basil: #376F1B;     /* Tu nuevo verde albahaca */
+    
+    /* Base de acordes y bordes */
+    --chord-color: #376F1B;     /* Verde albahaca por defecto */
+    --border-color: #000000;    /* Bordes negros gruesos */
+    --shadow-color: #000000;    /* Sombras duras */
 
-  /* Parámetros Estructurales Neo-Brutalistas */
-  --brutal-stroke: 3px solid var(--border-color);
-  --brutal-shadow: 5px 5px 0px var(--shadow-color);
-  
-  /* Tipografías */
-  --font-logo: 'Caveat', cursive;
-  --font-app: 'Plus Jakarta Sans', sans-serif;
+    /* Estructura Ruda */
+    --brutal-stroke: 3px solid var(--border-color);
+    --brutal-shadow: 5px 5px 0px var(--shadow-color);
+    
+    /* Fuentes configuradas */
+    --font-logo: 'Caveat', cursive, sans-serif;
+    --font-app: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
 }
 
-body.dark-theme {
-  /* 🌙 MODO OSCURO - Estilo Rudo No Plano (Bordes Iluminados) */
-  --bg-app: #0B1308;          /* Tu verde bosque profundo (dark-forest) */
-  --bg-card: #14220F;         /* Tarjetas un micro-tono más claro */
-  --text-main: #DEF4D2;       /* Texto menta/crema de alta legibilidad */
-  --border-color: #376F1B;    /* Tus bordes ahora se iluminan con verde albahaca */
-  --shadow-color: #050A04;    /* Sombra oscura estructural */
-  --lyrics-bg: #111A0E;       /* Fondo oscuro para la zona de canto */
-  
-  /* Acordes Camaleónicos (Color base si no se especifica tipo) */
-  --chord-color: #DEF4D2;
-}
-
-/* ==========================================================================
-   ESTILOS GENERALES Y RESET
-   ========================================================================== */
-*, *::before, *::after {
-  box-sizing: border-box;
+body.dark-mode {
+    /* 🌙 MODO OSCURO - Rudo y Estructural (No Flat) */
+    --bg-color: #0B1308;        /* Tu verde bosque profundo dark-forest */
+    --text-color: #DEF4D2;      /* Texto crema/menta ultra legible */
+    --card-bg: #14220F;         /* Tarjetas un micro-tono más claro */
+    --header-bg: #050A04;       /* Encabezado ultra oscuro */
+    
+    /* Bordes iluminados con tu verde albahaca para que no se vea plano */
+    --border-color: #376F1B;    
+    --shadow-color: #050A04;    
+    
+    /* Base de acordes por defecto en la oscuridad */
+    --chord-color: #DEF4D2;     
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: #e2e8f0; /* Fondo del navegador exterior */
-  font-family: var(--font-app);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+    font-family: var(--font-app);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0; padding: 0;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-/* Contenedor del celular (Viewport de WebApp móvil) */
-.app-container {
-  background-color: var(--bg-app);
-  width: 100%;
-  max-width: 412px; /* Tamaño estándar de pantalla móvil */
-  height: 892px;
-  border: 4px solid #000000;
-  border-radius: 32px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  transition: background-color 0.3s ease;
+header {
+    background-color: var(--header-bg); 
+    color: white; 
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 20px;
+    border-bottom: var(--brutal-stroke);
+}
+/* Tu tipografía manuscrita exclusiva para el logo */
+header h1 { 
+    margin: 0; 
+    font-family: var(--font-logo);
+    font-size: 32px; 
+    text-align: center; 
+    flex-grow: 1; 
+}
+header a { color: white; text-decoration: none; font-weight: bold; }
+
+/* Botones de Icono Estilo Figma */
+.theme-btn, .header-back { 
+    background: var(--card-bg); 
+    border: var(--brutal-stroke); 
+    box-shadow: 3px 3px 0px var(--shadow-color);
+    font-size: 20px; 
+    cursor: pointer; 
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--text-color);
+    transition: transform 0.1s;
+}
+.theme-btn:active, .header-back:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px var(--shadow-color);
 }
 
-/* ==========================================================================
-   COMPONENTES DE LA INTERFAZ
-   ========================================================================== */
+/* SPA VIEWS */
+.view-section { display: block; }
+.hidden { display: none !important; }
 
-/* 🏛️ TOP APP BAR */
-.top-app-bar {
-  display: flex;
-  align-items: center;
-  padding: 20px 16px 10px 16px;
-  gap: 12px;
+/* =========================================
+   MENÚ Y FILTROS
+   ========================================= */
+.search-container { text-align: center; margin: 25px auto; padding: 0 20px; }
+#search-bar {
+    width: 100%; 
+    max-width: 500px; 
+    padding: 14px 20px; 
+    border-radius: 25px;
+    border: var(--brutal-stroke); 
+    outline: none; 
+    background: var(--card-bg); 
+    color: var(--text-color);
+    box-shadow: 4px 4px 0px var(--shadow-color);
 }
 
-.header-title-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+.filter-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; }
+.filter-tab {
+    padding: 10px 18px; 
+    border-radius: 20px; 
+    border: var(--brutal-stroke);
+    background: var(--card-bg); 
+    color: var(--text-color); 
+    cursor: pointer; 
+    font-weight: 800;
+    box-shadow: 3px 3px 0px var(--shadow-color);
 }
+.filter-tab.active { background: var(--accent-lime); color: black; }
 
-/* El título puede romperse en 2 líneas de forma natural como pide Material */
-.song-main-title {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--text-main);
-  line-height: 1.2;
+.toolbar {
+    max-width: 1200px; margin: 0 auto 20px; padding: 0 20px;
+    display: flex; justify-content: space-between; align-items: center;
 }
+.sort-tool select { 
+    padding: 10px; 
+    border-radius: 8px; 
+    border: var(--brutal-stroke);
+    background: var(--card-bg); 
+    color: var(--text-color); 
+    font-weight: bold;
+}
+.view-tool button { 
+    padding: 10px 14px; 
+    border: var(--brutal-stroke); 
+    border-radius: 8px; 
+    cursor: pointer; 
+    color: var(--text-color); 
+    background: var(--card-bg);
+    font-weight: bold;
+}
+.view-tool button.active { background: var(--accent-lime); color: black; }
 
-.song-main-artist {
-  margin: 2px 0 0 0;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-main);
-  opacity: 0.8;
-}
+/* =========================================
+   TARJETAS (Neo-Brutalistas completas)
+   ========================================= */
+.grid-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.songs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+.songs-list { display: flex; flex-direction: column; gap: 18px; }
 
-/* Botones Icono Universales */
-.btn-icon {
-  background: var(--bg-card);
-  border: var(--brutal-stroke);
-  box-shadow: 3px 3px 0px var(--shadow-color);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 16px;
-  color: var(--text-main);
-  cursor: pointer;
-  transition: transform 0.1s ease;
+.card {
+    background: var(--card-bg); 
+    padding: 20px; 
+    border-radius: 16px;
+    border: var(--brutal-stroke);
+    box-shadow: var(--brutal-shadow); 
+    text-decoration: none; 
+    color: inherit;
+    display: block;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.btn-icon:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--shadow-color);
+.card:active {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0px var(--shadow-color);
 }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.card h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.card p { margin: 6px 0 0; opacity: 0.8; font-weight: 500; }
 
-/* 📱 CONTENIDO PRINCIPAL */
-.main-content {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 0 16px 100px 16px; /* Espacio abajo para los FABs fijados */
+.fav-btn {
+    background: none; border: none; font-size: 22px; cursor: pointer;
+    transition: transform 0.2s;
+    color: var(--text-color);
 }
-
-/* Fila de acciones Editar / Borrar */
-.top-actions-row {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin: 15px 0;
-}
-
-.top-actions-row button {
-  font-family: var(--font-app);
-  font-weight: 700;
-  font-size: 14px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: var(--brutal-stroke);
-  box-shadow: 3px 3px 0px var(--shadow-color);
-  cursor: pointer;
-}
-
-.btn-secondary { background-color: var(--bg-card); color: var(--text-main); }
-.btn-danger { background-color: var(--color-original); color: #000000; }
-
-/* 💳 SONG INFO CARD */
-.song-info-card {
-  background-color: var(--bg-card);
-  border: var(--brutal-stroke);
-  box-shadow: var(--brutal-shadow);
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.badge-icon-wrapper {
-  background-color: var(--color-original);
-  border: var(--brutal-stroke);
-  border-radius: 12px;
-  width: 64px;
-  height: 64px;
-  display: grid;
-  place-items: center;
-  font-size: 28px;
-  color: #000000;
-}
-
-.card-details {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+.fav-btn:hover { transform: scale(1.2); }
 
 .badge {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
-  border: 1.5px solid #000;
-  width: fit-content;
-  color: #000000;
+    font-size: 11px; 
+    font-weight: 800;
+    padding: 3px 8px; 
+    border-radius: 10px;
+    border: 1.5px solid #000000;
+    text-transform: uppercase; 
+    margin-left: 8px;
+    color: #000000 !important;
 }
-.badge-original { background-color: var(--color-original); }
-.badge-cover { background-color: var(--color-cover); }
+.badge-original { background: var(--color-original); }
+.badge-cover { background: var(--color-cover); }
 
-.song-style-label {
-  font-size: 11px;
-  margin-top: 4px;
-  color: var(--text-main);
-  opacity: 0.6;
+/* =========================================
+   CANCIÓN Y COMPORTAMIENTO MATERIAL DESIGN
+   ========================================= */
+/* Top bar que permite expandirse a 2 líneas si el título es largo */
+.top-bar-song {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 18px 20px; 
+    background: var(--header-bg); 
+    color: var(--text-color);
+    border-bottom: var(--brutal-stroke);
+    gap: 15px;
 }
-
-.card-title {
-  margin: 4px 0 0 0;
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-main);
+.top-bar-song .song-title-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
-
-.card-artist {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text-main);
-  opacity: 0.8;
+.top-bar-song h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
 }
-
-/* 🎤 CONTENEDOR DE LA LETRA */
-.lyrics-container {
-  background-color: var(--lyrics-bg);
-  border: var(--brutal-stroke);
-  border-radius: 16px;
-  padding: 20px;
-  transition: background-color 0.3s ease;
-}
-
-.verse-section {
-  margin-bottom: 24px;
+.top-bar-song p {
+    margin: 2px 0 0 0;
+    font-size: 13px;
+    opacity: 0.8;
 }
 
-.section-tag {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-main);
-  opacity: 0.5;
-  margin-bottom: 8px;
+.song-container {
+    max-width: 800px; 
+    margin: 20px auto; 
+    padding: 24px 24px 180px; /* Margen para que los FABs no tapen la letra */
+    background: var(--card-bg);
+    border: var(--brutal-stroke);
+    border-radius: 20px;
+    box-shadow: var(--brutal-shadow);
+    font-family: 'Courier New', monospace; 
+    font-size: 20px;
+    line-height: 1.7;
 }
 
-.line {
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--text-main);
-  min-height: 24px;
+.chord { 
+    color: var(--chord-color); 
+    font-weight: bold; 
+    cursor: pointer; 
+    display: inline-block;
 }
 
-/* Estilo Base de los Acordes */
-.chord {
-  font-weight: 700;
-  color: var(--chord-color);
-  font-size: 15px;
-  display: inline-block;
+/* =========================================
+   🔥 EXCLUSIVO DARK MODE: ACORDES INTELIGENTES
+   ========================================= */
+body.dark-mode .song-cover .chord {
+    color: var(--color-cover) !important;     /* Se vuelven Lila si la canción es Cover */
+}
+body.dark-mode .song-original .chord {
+    color: var(--color-original) !important;  /* Se vuelven Melocotón si es Original */
 }
 
-/* ==========================================================================
-   🔥 MAGIA DE ACORDES INTELIGENTES EXCLUSIVOS EN DARK MODE
-   ========================================================================== */
-body.dark-theme .song-cover .chord {
-  color: var(--color-cover) !important;    /* Se encienden Lila si es Cover */
+/* =========================================
+   🕹️ ACTION PANEL FLOTANTE DESDE EL FAB (Settings)
+   ========================================= */
+/* Reemplazamos la barra tosca fija por tu menú interactivo */
+.control-bar {
+    position: fixed; 
+    bottom: -320px; /* Escondido por defecto */
+    left: 20px;
+    right: 20px;
+    width: calc(100% - 40px);
+    max-width: 372px; /* Centrado como pop-up en la pantalla */
+    margin: 0 auto;
+    background: var(--accent-lime); /* Color de acción total */
+    border: var(--brutal-stroke);
+    box-shadow: var(--brutal-shadow);
+    padding: 24px; 
+    display: flex; 
+    flex-direction: column;
+    gap: 16px; 
+    border-radius: 24px;
+    z-index: 1000;
+    transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+/* Se activa inyectando la clase .open desde tu JavaScript */
+.control-bar.open {
+    bottom: 95px; /* Sube y flota elegantemente sobre los FABs */
 }
 
-body.dark-theme .song-original .chord {
-  color: var(--color-original) !important; /* Se encienden Melocotón si es Original */
+.control-group { 
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; 
+    background: var(--card-bg); 
+    padding: 8px 16px; 
+    border-radius: 16px; 
+    border: 2px solid #000000;
+    color: #000000; 
+    font-weight: bold;
+}
+.btn-small { 
+    padding: 6px 12px; 
+    border-radius: 50%; 
+    border: 2px solid #000000; 
+    background: var(--bg-color); 
+    color: var(--text-color); 
+    font-weight: bold; 
+    cursor: pointer; 
+    box-shadow: 2px 2px 0px #000000;
+}
+.btn-small:active {
+    transform: translate(1px, 1px);
+    box-shadow: 0px 0px 0px #000000;
 }
 
-
-/* ==========================================================================
-   🕹️ ACTION PANEL FLOTANTE (Ajustes de Afinación/Métrica)
-   ========================================================================== */
-.utility-action-panel {
-  position: absolute;
-  bottom: -300px; /* Escondido por defecto abajo */
-  left: 16px;
-  right: 16px;
-  background-color: var(--accent-lime); /* Súper brillante e interactivo */
-  border: var(--brutal-stroke);
-  box-shadow: var(--brutal-shadow);
-  border-radius: 24px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 10;
-  transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* =========================================
+   🟢 CONTENEDOR DE FABS FIJOS (Zona de Pulgar)
+   ========================================= */
+.sticky-fabs {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999;
 }
-
-/* Clase activa controlada por JS para abrirlo */
-.utility-action-panel.open {
-  bottom: 90px; /* Sube justo arriba de los botones principales */
+.fab-trigger {
+    border: var(--brutal-stroke);
+    box-shadow: var(--brutal-shadow);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
 }
-
-.btn-close-panel {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #000000;
+.fab-trigger:active {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0px var(--shadow-color);
 }
-
-.control-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.btn-main { 
+    width: 64px;
+    height: 64px;
+    background: var(--accent-lime); 
+    color: black; 
+    font-size: 24px;
 }
-
-.control-label {
-  font-weight: 800;
-  font-size: 16px;
-  color: #000000;
-}
-
-.control-buttons {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-control-step {
-  background-color: var(--bg-card);
-  border: 2px solid #000000;
-  box-shadow: 2px 2px 0px #000000;
-  min-width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  font-family: var(--font-app);
-  font-weight: 700;
-  font-size: 14px;
-  color: #000000;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.btn-control-step:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #000000;
-}
-
-.control-value-display {
-  font-weight: 700;
-  font-size: 16px;
-  min-width: 20px;
-  text-align: center;
-  color: #000000;
-}
-
-/* ==========================================================================
-   🟢 STICKY FABS CONTAINER (Botones Fijos)
-   ========================================================================== */
-.sticky-fabs-container {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 5;
-}
-
-.fab {
-  border: var(--brutal-stroke);
-  box-shadow: var(--brutal-shadow);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: transform 0.1s ease;
-}
-.fab:active {
-  transform: translate(3px, 3px);
-  box-shadow: 2px 2px 0px var(--shadow-color);
-}
+.btn-main.paused { background: #e74c3c; color: white; }
 
 .fab-settings {
-  background-color: var(--bg-card);
-  width: 52px;
-  height: 52px;
-  font-size: 20px;
-  color: var(--text-main);
+    width: 52px;
+    height: 52px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 20px;
 }
 
-.fab-play {
-  background-color: var(--accent-lime);
-  width: 64px;
-  height: 64px;
-  font-size: 24px;
-  color: #000000;
+/* =========================================
+   ADMIN PANEL
+   ========================================= */
+.admin-form { 
+    max-width: 600px; 
+    margin: 40px auto; 
+    background: var(--card-bg); 
+    padding: 30px; 
+    border: var(--brutal-stroke);
+    border-radius: 16px; 
+    box-shadow: var(--brutal-shadow); 
+}
+.field { margin-bottom: 20px; }
+.field label { display: block; font-weight: 800; margin-bottom: 8px; }
+.field input[type="text"], .field textarea {
+    width: 100%; padding: 14px; border-radius: 8px; border: var(--brutal-stroke);
+    background: var(--bg-color); color: var(--text-color); box-sizing: border-box;
+}
+.field textarea {
+    height: 250px;
+    resize: vertical; 
+    font-family: 'Courier New', monospace; 
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+.toggle-group {
+    display: flex; background: var(--bg-color); padding: 6px; border-radius: 50px; border: var(--brutal-stroke); align-items: center;
+}
+.toggle-group label { flex: 1; margin: 0; cursor: pointer; }
+.toggle-group input { display: none; }
+.toggle-group span {
+    display: block; text-align: center; padding: 12px; border-radius: 40px; font-weight: bold; transition: 0.3s;
+    color: var(--text-color);
+}
+.toggle-group input:checked + span { background: var(--accent-lime); color: black; }
+
+/* MODAL / DIAGRAMAS */
+.modal-overlay {
+    display: none; position: fixed; top: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;
+}
+.modal-content { 
+    background: var(--card-bg); 
+    padding: 30px; 
+    border-radius: 20px; 
+    border: var(--brutal-stroke);
+    text-align: center; 
+    min-width: 260px; 
+    box-shadow: var(--brutal-shadow);
+}
+.modal-title { color: var(--chord-color); margin-bottom: 15px; font-weight: 800; }
+.modal-close { 
+    margin-top: 20px; padding: 12px; width: 100%; border-radius: 12px; 
+    border: var(--brutal-stroke); background: var(--header-bg); color: white; font-weight: bold; cursor: pointer; 
+}
+
+.open-strings { display: flex; justify-content: space-between; width: 140px; margin: 0 auto 5px; font-family: monospace; font-weight: bold; }
+.fretboard-wrap { position: relative; width: 140px; margin: 0 auto; }
+.fretboard { width: 140px; height: 160px; border-top: 5px solid var(--text-color); position: relative; display: flex; flex-direction: column; }
+.fret { flex-grow: 1; border-bottom: 2px solid #888; }
+.string-lines { position: absolute; width: 100%; height: 100%; display: flex; justify-content: space-between; top: 0; }
+.string-line { width: 2px; background: var(--text-color); height: 100%; }
+.dot { position: absolute; width: 16px; height: 16px; background: var(--chord-color); border-radius: 50%; transform: translate(-50%, -50%); }
+.fret-number { position: absolute; left: -25px; top: 10px; font-weight: bold; }
+
+/* =========================================
+   BOTONES ACCIÓN GENERALES
+   ========================================= */
+.btn-save { 
+    background: var(--accent-lime); 
+    color: black; 
+    border: var(--brutal-stroke); 
+    padding: 15px 25px; 
+    border-radius: 30px; 
+    font-weight: 800; 
+    cursor: pointer; 
+    width: 100%; 
+    font-size: 18px; 
+    margin-top: 15px;
+    box-shadow: var(--brutal-shadow);
+}
+.btn-save:hover { background: #b8e63a; }
+
+.dark-mode select {
+    color-scheme: dark;
+    background-color: var(--card-bg); 
+    color: var(--text-color); 
+}
+
+/* =========================================
+   MODO EDICIÓN (SONG VIEW)
+   ========================================= */
+.edit-textarea {
+    width: 100%;
+    height: 60vh; 
+    font-family: 'Courier New', monospace; 
+    font-size: 16px;
+    padding: 15px;
+    border: var(--brutal-stroke);
+    border-radius: 12px;
+    background: var(--bg-color); 
+    color: var(--text-color);
+    resize: vertical;
+    margin-top: 20px;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.edit-actions { display: flex; gap: 12px; margin-top: 15px; }
+
+.btn-cancel {
+    background: #e74c3c;
+    color: white;
+    border: var(--brutal-stroke);
+    padding: 15px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1; 
+    box-shadow: var(--brutal-shadow);
+}
+.btn-cancel:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px var(--shadow-color);
 }
