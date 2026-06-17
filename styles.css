@@ -1,39 +1,34 @@
 /* ==========================================================================
-   1. FUENTE ÚNICA DE VERDAD: DESIGN TOKENS (Tu colección mode-1 de Figma)
+   1. VARIABLES DE DISEÃ‘O (DESIGN TOKENS REALES)
    ========================================================================== */
 :root {
-  /* Paleta de Colores Oficiales */
-  --warm-gray: #ECECDC;
-  --ivory-cream: #F9F9F4;
-  --lime-green: #D9FF85;
-  --lavender-purple: #CEBCFF;
-  --peach-orange: #FFBD83;
-  --dark-forest: #0F1D07;
-  --army-green: #19320C;
-  --mint-cream: #DEF4D2;
-  --sage-gray: #C0C3B1;
-  --grunge-forest: #376F1B;
+  --lime-green: #d9ff85;
+  --lavender-purple: #cebcff;
+  --peach-orange: #ffbd83;
+  --dark-forest: #0f1d07;
+  --army-green: #19320c;
+  --mint-cream: #def4d2;
+  --warm-gray: #ececdc;
+  --ivory-cream: #f9f9f4;
+  --sage-gray: #c0c3b1;
+  --grunge-forest: #376f1b;
 
-  /* Tipografías de Figma */
   --font-logo: "Sarina", cursive, sans-serif;
   --font-app: "Outfit", sans-serif;
-  --font-chords: "Courier New", monospace;
+  --font-mono: "Courier New", monospace;
 
-  /* Reglas Estructurales Neo-Brutalistas */
-  --brutal-stroke: 1px solid var(--dark-forest);
-  --brutal-shadow: 3px 4px 0px 0px var(--dark-forest);
+  --stroke-thick: 1.5px solid var(--dark-forest);
+  --shadow-rigid: 3px 4px 0px 0px var(--dark-forest);
 }
 
 /* ==========================================================================
-   2. RESET GENERAL Y CONFIGURACIÓN BASE
+   2. RESET BRUTALISTA SEMÃNTICO
    ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: none;
-  text-decoration: none;
-  background: none;
+  margin: 0; padding: 0;
+  border: none; background: none;
+  outline: none; text-decoration: none;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -41,535 +36,480 @@ body {
   font-family: var(--font-app);
   background-color: var(--warm-gray);
   color: var(--dark-forest);
-  min-height: 100vh;
   padding: 16px;
+  min-height: 100vh;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-/* Contenedor WebApp (Para envolver tus pantallas SPA de manera responsiva) */
-.homepage-list {
+.view-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  align-items: center;
-  justify-content: flex-start;
-  position: relative;
-  width: 100%;
-  max-width: 1200px; /* Evita que en pantallas ultra-wide se rompa */
-  margin: 0 auto;
+  gap: 24px;
+}
+.hidden { display: none !important; }
+
+/* ==========================================================================
+   3. INTERACCIONES ADICTIVAS (ESTADOS ENABLED / HOVER / ACTIVE)
+   ========================================================================== */
+.icon-button, .tab-btn, .dropdown-trigger, .view-btn, .action-pill, .btn-micro, .action-submit-btn {
+  cursor: pointer;
+  transform: translate(0, 0);
+  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Efecto de hundimiento exacto al clickear */
+.icon-button:active, .tab-btn:active, .dropdown-trigger:active, 
+.action-pill:active, .btn-micro:active, .action-submit-btn:active {
+  transform: translate(3px, 4px) !important;
+  box-shadow: 0px 0px 0px 0px var(--dark-forest) !important;
 }
 
 /* ==========================================================================
-   3. ESTILOS DE COMPONENTES INTERACTIVOS (Enabled, Hover, Active)
+   4. ESTILOS DE COMPONENTES DE INTERFAZ
    ========================================================================== */
 
-/* Botón de Icono Círculo (Luna, Engrane, Buscar, Flecha Back) */
-.icon-button {
-  background: var(--ivory-cream);
-  border-radius: 50px;
-  border: var(--brutal-stroke);
-  padding: 8px 12px;
+/* Cabecera */
+.app-header {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 40px;
-  position: relative;
-  box-shadow: var(--brutal-shadow);
-  color: var(--dark-forest);
-  cursor: pointer;
-  transform: translate(0, 0);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-.icon-button:hover { background: #f2f2e8; }
-.icon-button:active {
-  transform: translate(3px, 4px); /* Se desplaza la distancia exacta de la sombra */
-  box-shadow: 0px 0px 0px 0px var(--dark-forest); /* La sombra desaparece */
-}
-
-/* Botones de Filtro (Pestañas Nav: All, Favorites, Covers, Originals) */
-.filter-tab {
-  background: var(--ivory-cream);
-  border-radius: 50px;
-  border: var(--brutal-stroke);
-  padding: 8px 16px;
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  font-family: var(--font-app);
-  font-size: 16px;
-  color: var(--dark-forest);
-  cursor: pointer;
-  box-shadow: var(--brutal-shadow);
-  transform: translate(0, 0);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-.filter-tab:hover { background: #f2f2e8; }
-.filter-tab.active {
-  background: var(--lime-green);
-}
-.filter-tab:active {
-  transform: translate(3px, 4px);
-  box-shadow: 0px 0px 0px 0px var(--dark-forest);
-}
-
-/* Botón Primario de Guardar (Admin) */
-.btn-save {
-  background: var(--lime-green);
-  border-radius: 50px;
-  border: var(--brutal-stroke);
-  padding: 14px 24px;
-  font-family: var(--font-app);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--dark-forest);
-  cursor: pointer;
-  box-shadow: var(--brutal-shadow);
-  transform: translate(0, 0);
-  transition: all 0.1s ease;
-  width: 100%;
-  max-width: 400px;
-  display: block;
-  margin: 16px auto 0;
-  text-align: center;
-}
-.btn-save:hover { background: #caef76; }
-.btn-save:active {
-  transform: translate(3px, 4px);
-  box-shadow: 0px 0px 0px 0px var(--dark-forest);
-}
-
-/* ==========================================================================
-   4. INTERFAZ: ESTRUCTURA INTERNA DE COMPONENTES (Mobile Base)
-   ========================================================================== */
-
-/* Header & Logo */
-.header {
-  display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  align-self: stretch;
-}
-.logo {
-  padding: 20px 0;
-  display: flex;
-  align-items: center;
+  width: 100%;
   height: 80px;
 }
 .my-songbook {
-  color: var(--dark-forest);
   font-family: var(--font-logo);
   font-size: 32px;
   font-weight: 400;
 }
+.icon-button {
+  background: var(--ivory-cream);
+  border-radius: 50%;
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--dark-forest);
+  font-size: 16px;
+}
 
 /* Buscador */
-.search-bar {
+.search-container {
   display: flex;
-  flex-direction: row;
   gap: 12px;
-  align-items: center;
-  justify-content: center;
-  align-self: stretch;
+  width: 100%;
 }
-.input-field {
+.search-input-wrap {
+  position: relative;
+  flex: 1;
   background: var(--ivory-cream);
   border-radius: 50px;
-  border: var(--brutal-stroke);
-  padding: 8px 12px 8px 18px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
   height: 40px;
-  box-shadow: 3px 4px 0px 0px rgba(2, 2, 4, 1);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
 }
-.search-song-or-artist {
-  color: var(--dark-forest);
+.search-input {
+  width: 100%;
   font-family: var(--font-app);
   font-size: 16px;
-  outline: none;
-  width: 90%;
+  color: var(--dark-forest);
+}
+.combo-arrow {
+  position: absolute;
+  right: 16px;
+  font-size: 14px;
 }
 
-/* Barra de Filtros / Nav */
-.nav {
+/* Barra de NavegaciÃ³n por PestaÃ±as */
+.filter-navigation {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  align-self: stretch;
-  overflow-x: auto; /* Permite scroll si la pantalla es chica */
+  gap: 8px;
+  overflow-x: auto;
   padding-bottom: 8px;
+  width: 100%;
+}
+.tab-btn {
+  background: var(--ivory-cream);
+  border-radius: 50px;
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
+  padding: 8px 16px;
+  font-family: var(--font-app);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--dark-forest);
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: var(--lime-green);
+  font-weight: 700;
 }
 
-/* Sub-Filtros (Sort by & Grid/List Changers) */
-.songs {
+/* Toolbar Sub-filtros */
+.toolbar-section {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-self: stretch;
-}
-.filters {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   justify-content: space-between;
-  align-self: stretch;
+  align-items: center;
+  width: 100%;
+  position: relative;
 }
-.filter-chips {
+
+/* El Dropdown Desplegable Real Brutalista */
+.dropdown-container {
+  position: relative;
+  z-index: 10;
+}
+.dropdown-trigger {
   background: var(--warm-gray);
   border-radius: 25px;
   border: 1px solid var(--sage-gray);
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
+  padding: 8px 16px;
   font-family: var(--font-app);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--dark-forest);
+}
+.dropdown-menu {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 45px; left: 0;
+  background: var(--lime-green);
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
+  border-radius: 16px;
+  width: 200px;
+  overflow: hidden;
+}
+.dropdown-container.open .dropdown-menu {
+  display: block; /* Se activa mediante JS o pruebas */
+}
+.dropdown-item {
+  padding: 12px 16px;
+  font-family: var(--font-app);
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  color: var(--dark-forest);
 }
-.view {
+.dropdown-item:hover { background: #caef76; }
+.dropdown-item.active {
+  background: var(--dark-forest);
+  color: var(--lime-green);
   display: flex;
-  flex-direction: row;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
 }
-.filter-chips2, .filter-chips3 {
+
+/* Conmutador de Vistas Grid/List */
+.view-toggle-group { display: flex; gap: 8px; }
+.view-btn {
   background: var(--warm-gray);
   border-radius: 25px;
   border: 1px solid var(--sage-gray);
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 40px;
-  cursor: pointer;
-  color: var(--dark-forest);
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  font-size: 14px; color: var(--dark-forest);
 }
-.filter-chips3.active, .filter-chips2.active {
+.view-btn.active {
   background: var(--lime-green);
-  border: var(--brutal-stroke);
+  border: var(--stroke-thick);
 }
 
-/* Lista general de Tarjetas */
-.list {
+/* =========================================
+   5. REJILLA DE TARJETAS ADAPTABLE (MOBILE-FIRST)
+   ========================================= */
+.songs-container {
+  width: 100%;
+}
+
+/* Modo por defecto en Celular: 2 columnas segÃºn tu imagen homepage-grid_5.jpg */
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* Modo Lista en Celular */
+.songs-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  align-self: stretch;
+  gap: 14px;
 }
 
-/* Tarjeta Vertical (Grid Base) y Horizontal (List Base) unificadas */
+/* La Tarjeta Universal */
 .song-card {
   background: var(--ivory-cream);
   border-radius: 16px;
-  border: var(--brutal-stroke);
-  box-shadow: var(--brutal-shadow);
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
   overflow: hidden;
-  width: 100%;
-  display: block;
 }
-.card-media-wrap {
+.card-body {
   padding: 12px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* Vertical en cel, horizontal en lista */
   gap: 12px;
-  align-items: center;
 }
-.card-img-bg {
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  flex-shrink: 0;
+.card-artwork {
+  border-radius: 12px;
+  width: 100%;
+  aspect-ratio: 1; /* Cuadrado perfecto */
+  display: grid;
+  place-items: center;
 }
-.card-img-bg.cover-theme { background: var(--lavender-purple); }
-.card-img-bg.original-theme { background: var(--peach-orange); }
+.card-artwork.original-bg { background: var(--peach-orange); }
+.card-artwork.cover-bg { background: var(--lavender-purple); }
+.artwork-icon { font-size: 48px; color: var(--dark-forest); }
 
-.card-icon-vector {
-  font-size: 32px;
-  color: var(--dark-forest);
-}
-.card-data-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-}
-.card-meta-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-.meta-left {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-}
-.badge-genre {
+.card-details { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.meta-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.genre-badge {
   border-radius: 50px;
   padding: 2px 10px;
   font-size: 12px;
   font-weight: 700;
-  border: var(--brutal-stroke);
-  color: var(--dark-forest);
+  border: var(--stroke-thick);
 }
-.badge-genre.cover-badge { background: var(--lavender-purple); }
-.badge-genre.original-badge { background: var(--peach-orange); }
+.genre-badge.original-badge { background: var(--peach-orange); }
+.genre-badge.cover-badge { background: var(--lavender-purple); }
+.style-label { font-size: 13px; opacity: 0.6; }
+.heart-btn { font-size: 18px; color: var(--dark-forest); cursor: pointer; }
+.card-title { font-size: 18px; font-weight: 700; line-height: 1.2; margin-top: 4px; }
+.card-artist { font-size: 15px; opacity: 0.8; }
 
-.song-style2 {
-  color: var(--dark-forest);
-  font-size: 14px;
-  font-weight: 400;
-  opacity: 0.7;
-}
-.fav-btn {
-  font-size: 22px;
-  cursor: pointer;
-}
-.card-info-group {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.song-name {
-  color: var(--dark-forest);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 20px;
-}
-.artist {
-  color: var(--dark-forest);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 20px;
-}
-
-/* FAB Flotante */
-.add-song-button {
-  background: var(--lime-green);
-  border-radius: 90px;
-  border: 1.8px solid var(--dark-forest);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
+.mobile-fab {
+  background: var(--dark-forest);
+  color: var(--lime-green);
+  width: 64px; height: 64px;
+  border-radius: 50%;
   position: fixed;
-  right: 24px;
-  bottom: 24px;
-  box-shadow: 5.4px 7.2px 0px 0px var(--dark-forest);
-  font-size: 28px;
-  color: var(--dark-forest);
-  cursor: pointer;
-  z-index: 100;
+  right: 20px; bottom: 20px;
+  display: grid; place-items: center;
+  font-size: 24px;
+  box-shadow: 4px 4px 0px 0px #000;
+  z-index: 90;
 }
 
-/* ==========================================================================
-   5. INTERFAZ: FORMULARIO ADMIN & MODO EDICIÓN
-   ========================================================================= */
-.admin-form {
-  width: 100%;
-  max-width: 680px; /* Medida ergonómica de tu captura desktop-addsong */
-  margin: 0 auto;
+/* ConfiguraciÃ³n especÃ­fica cuando el contenedor se vuelve lista plana horizontal */
+.songs-list .card-body {
+  flex-direction: row;
+  align-items: center;
 }
-.field {
-  margin-bottom: 24px;
+.songs-list .card-artwork {
+  width: 80px; height: 80px;
+}
+
+/* =========================================
+   6. VISTA CANCIÃ“N INTERNA (MOBILE DETALLE)
+   ========================================= */
+.header-song-meta { text-align: center; }
+.header-song-meta h2 { font-size: 16px; font-weight: 700; }
+.header-song-meta p { font-size: 13px; opacity: 0.7; }
+
+.action-trigger-bar { display: flex; gap: 8px; justify-content: flex-end; width: 100%; }
+.action-pill {
+  background: var(--ivory-cream);
+  border: var(--stroke-thick);
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-family: var(--font-app);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark-forest);
+}
+.action-pill.delete-pill { background: #e5f9a7; } /* Micro tono de alerta suave brutalista */
+
+.song-banner-card {
+  background: var(--ivory-cream);
+  border: var(--stroke-thick);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  box-shadow: var(--shadow-rigid);
+}
+.banner-artwork { width: 80px; height: 80px; border-radius: 12px; display: grid; place-items: center; }
+.banner-icon { font-size: 36px; color: var(--dark-forest); }
+.banner-info h3 { font-size: 20px; font-weight: 700; margin-top: 4px; }
+
+.lyrics-canvas {
+  background: var(--ivory-cream);
+  border: var(--stroke-thick);
+  border-radius: 20px;
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 2;
+  white-space: pre;
+  overflow-x: auto;
+  width: 100%;
+  box-shadow: var(--shadow-rigid);
+}
+.chord { color: var(--grunge-forest); font-weight: 700; cursor: pointer; }
+
+/* Consola de Herramientas Flotante MÃ³vil */
+.console-panel {
+  position: fixed;
+  bottom: -400px; left: 16px; right: 16px;
+  background: var(--lime-green);
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
+  border-radius: 32px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  z-index: 200;
+  transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.field label {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--dark-forest);
-}
-.field input[type="text"], .field textarea, .field select {
-  width: 100%;
-  padding: 12px 18px;
+.console-panel.open { bottom: 24px; }
+.console-close-btn { position: absolute; top: 16px; right: 20px; font-size: 20px; cursor: pointer; color: var(--dark-forest); }
+
+.console-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(15,29,7,0.1); padding-bottom: 8px; }
+.console-label { font-family: var(--font-app); font-weight: 700; font-size: 16px; }
+.console-buttons { display: flex; gap: 8px; align-items: center; }
+.btn-micro {
   background: var(--ivory-cream);
-  border-radius: 12px;
-  border: var(--brutal-stroke);
-  font-family: var(--font-app);
-  font-size: 16px;
-  color: var(--dark-forest);
+  border: 1px solid var(--dark-forest);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--font-app); font-weight: 700; font-size: 14px;
+  box-shadow: 2px 2px 0px 0px var(--dark-forest);
 }
-.field textarea {
-  height: 250px;
-  resize: vertical;
-  font-family: var(--font-chords);
-  line-height: 1.6;
+.speed-value { font-family: var(--font-app); font-weight: 700; width: 20px; text-align: center; }
+.console-play-btn {
+  background: var(--ivory-cream);
+  border: var(--stroke-thick);
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  margin: 8px auto 0;
+  font-size: 20px;
+  box-shadow: var(--shadow-rigid);
 }
 
-/* Selector Segmentado de Tipo (Cover/Original) */
-.toggle-group {
+/* =========================================
+   7. INTERFAZ: FORMULARIO ADMIN PANEL
+   ========================================= */
+.form-container { width: 100%; display: flex; flex-direction: column; gap: 20px; }
+.form-page-title { text-align: center; font-size: 24px; font-weight: 700; }
+.input-group { display: flex; flex-direction: column; gap: 8px; }
+.input-group label { font-weight: 700; font-size: 15px; }
+.brutal-input, .brutal-select, .brutal-textarea {
+  background: var(--ivory-cream);
+  border: var(--stroke-thick);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--font-app);
+  font-size: 15px;
+  color: var(--dark-forest);
+  width: 100%;
+}
+.brutal-textarea { height: 200px; font-family: var(--font-mono); resize: vertical; }
+
+.segmented-control {
   display: flex;
   background: var(--ivory-cream);
+  border: var(--stroke-thick);
   border-radius: 50px;
-  border: var(--brutal-stroke);
   overflow: hidden;
-  height: 48px;
+  height: 44px;
 }
-.toggle-group label {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.2s;
+.segment-option { flex: 1; display: flex; }
+.segment-option input { display: none; }
+.segment-trigger {
+  width: 100%; display: grid; place-items: center;
+  font-weight: 700; cursor: pointer; transition: all 0.1s;
 }
-.toggle-group input { display: none; }
-.toggle-group span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-.toggle-group input:checked + span {
+.segment-option input:checked + .segment-trigger {
   background: var(--dark-forest);
   color: var(--ivory-cream);
 }
-
-/* ==========================================================================
-   6. INTERFAZ: VISOR DE CANCIONES INTERNO Y TORRE DE CONTROL
-   ========================================================================== */
-.top-bar-song {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-}
-.song-container {
-  width: 100%;
-  background: var(--ivory-cream);
-  border: var(--brutal-stroke);
-  border-radius: 20px;
-  padding: 24px;
-  font-family: var(--font-chords);
-  font-size: 20px;
-  line-height: 1.8;
-  position: relative;
-}
-.chord {
-  color: var(--grunge-forest);
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Torre de Control Flotante Ergonómica (`desktop-songpage`) */
-.control-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: transparent;
-  width: fit-content;
-}
-.control-group {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+.action-submit-btn {
   background: var(--lime-green);
-  border: var(--brutal-stroke);
-  box-shadow: var(--brutal-shadow);
-  padding: 8px 16px;
+  border: var(--stroke-thick);
+  box-shadow: var(--shadow-rigid);
   border-radius: 50px;
-  font-family: var(--font-app);
-  font-weight: 700;
+  padding: 14px;
+  font-family: var(--font-app); font-weight: 700; font-size: 16px;
   color: var(--dark-forest);
-}
-.btn-small {
-  width: 32px;
-  height: 32px;
-  background: var(--ivory-cream);
-  border-radius: 50px;
-  border: 1px solid var(--dark-forest);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  cursor: pointer;
+  margin-top: 12px;
 }
 
 /* ==========================================================================
-   ⚡ 7. SWITCH MÁGICO AUTOMÁTICO PARA COMPUTADORA (MEDIA QUERY DESKTOP)
+   âš¡ 8. SWITCH MÃGICO PARA PANTALLA GRANDE (MEDIA QUERIES DESKTOP)
    ========================================================================== */
 @media (min-width: 1024px) {
-  body {
-    padding: 48px; /* Más aire en Desktop */
-  }
+  body { padding: 40px var(--space-64, 40px); }
+  
+  /* Desactivar FAB de mÃ³vil en computadoras */
+  .mobile-fab { display: none !important; }
 
-  /* 📊 HOMEPAGE: Reacomodo de Tarjetas a 4 Columnas Exactas (`desktop-homepage-grid`) */
+  /* HOMEPAGE: Muta a 4 columnas perfectas segÃºn desktop-homepage-grid_2.jpg */
   .songs-grid {
-    display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px; /* Gutter Base 8 */
+    gap: 24px;
   }
-  
-  /* Comportamiento cuando el usuario elige la vista en Lista */
-  .songs-list {
-    display: flex;
+  .songs-grid .card-body {
     flex-direction: column;
-    gap: 16px;
   }
   
-  /* Ajuste de proporción en las tarjetas horizontales */
-  .songs-list .song-card {
-    max-width: 100%;
-  }
+  /* LISTA DESKTOP: Se estiran a todo lo ancho de forma estilizada */
+  .songs-list { gap: 20px; }
+  .songs-list .card-body { flex-direction: row; }
+  .songs-list .card-artwork { width: 80px; height: 80px; }
 
-  /* 🎤 CANCIÓN INTERNA: Letra e Instrumentos frente a frente (`desktop-songpage`) */
-  .song-view-layout {
+  /* CANCIÃ“N INTERNA WORKSPACE: Letra y Controles frente a frente */
+  .song-workspace {
     display: grid;
-    grid-template-columns: 1fr 300px; /* Letra extendida a la izq, controles a la der */
+    grid-template-columns: 1fr 260px; /* Columna de letra gigante y columna de controles */
     gap: 32px;
     align-items: start;
     width: 100%;
   }
+  .lyrics-canvas { font-size: 18px; }
 
-  .control-bar {
+  /* La consola deja de ser un pop-up mÃ³vil y se ancla fija como barra lateral */
+  .console-panel {
     position: sticky;
-    top: 48px; /* Se queda fijo al hacer scroll leyendo la letra */
-    align-self: start;
+    top: 40px; bottom: auto; left: auto; right: auto;
+    width: 100%;
+    border-radius: 24px;
+    padding: 20px;
+  }
+  .console-close-btn { display: none; } /* No se cierra en Desktop */
+  
+  /* FORMULARIOS: Se auto-centran en un bloque limpio */
+  .form-container {
+    max-width: 640px;
+    margin: 0 auto;
   }
 }
 
 /* ==========================================================================
-   🌙 8. REGLAS DE HERENCIA: MODO OSCURO (Rudo No Plano)
+   ðŸŒ™ 9. EXCLUSIVO NOCTURNO: MODO OSCURO INTELIGENTE
    ========================================================================== */
 body.dark-mode {
-  --warm-gray: #0B1308;        /* Verde bosque profundo */
-  --ivory-cream: #14220F;      /* Tarjeta un micro-tono más claro */
-  --dark-forest: #DEF4D2;      /* Texto menta/crema de alta legibilidad */
-  --brutal-stroke: 1px solid var(--grunge-forest); /* Tus bordes ahora se iluminan en verde albahaca */
-  --brutal-shadow: 3px 4px 0px 0px #050A04; /* Sombra ultra oscura */
-}
-body.dark-mode .toggle-group input:checked + span {
-  background: var(--lime-green);
-  color: #0F1D07;
+  --warm-gray: #0B1308;        /* Tu verde bosque profundo dark-forest */
+  --ivory-cream: #14220F;      /* Un paso mÃ¡s claro para el lienzo */
+  --dark-forest: #DEF4D2;      /* Texto menta-crema legible */
+  --stroke-thick: 1.5px solid var(--grunge-forest); /* Bordes iluminados en albahaca */
+  --shadow-rigid: 3px 4px 0px 0px #050A04;
 }
 
-/* Lógica de colores camaleónicos inteligentes exclusiva del Dark Mode */
-body.dark-mode .song-cover .chord {
-  color: var(--lavender-purple); /* Se encienden Lila si la rola es Cover */
-}
-body.dark-mode .song-original .chord {
-  color: var(--peach-orange);   /* Se encienden Melocotón si es Original */
-}
+body.dark-mode .dropdown-menu { background: var(--ivory-cream); }
+body.dark-mode .dropdown-item:hover { background: var(--grunge-forest); }
+
+/* Herencia camaleÃ³nica: los acordes mutan segÃºn el tipo de archivo */
+body.dark-mode .song-cover .chord { color: var(--lavender-purple); }
+body.dark-mode .song-original .chord { color: var(--peach-orange); }
