@@ -1,176 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>My Songbook</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Songbook</title>
+  
+  <!-- Tipografías oficiales de tu Figma -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Sarina&display=swap" rel="stylesheet">
+  
+  <!-- Iconos Pro de FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="menu-view" class="view-section">
-        <header>
-            <button class="header-back" onclick="navigateTo('admin-view')" title="Admin">
-                <i class="fa-solid fa-gear"></i>
-            </button>
-            <h1>My Songbook</h1>
-            <button class="theme-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
-        </header>
+  <!-- =========================================
+     PANTALLA 1: HOMEPAGE (LIST / GRID VIEW)
+     ========================================= -->
+  <div id="menu-view" class="view-section">
+    <header class="app-header">
+      <button class="icon-button" title="Agregar canción"><i class="fa-solid fa-plus"></i></button>
+      <h1 class="my-songbook">My Songbook</h1>
+      <button class="icon-button theme-btn"><i class="fa-solid fa-moon"></i></button>
+    </header>
 
-        <div class="search-container">
-            <input type="text" id="search-bar" placeholder="Search song or artist..." onkeyup="searchFilter()">
-        </div>
-
-        <div class="filter-tabs">
-            <button class="filter-tab active" onclick="filterByType('all', this)">All</button>
-            <button class="filter-tab" onclick="filterByType('favorite', this)">Favorites ❤️</button>
-            <button class="filter-tab" onclick="filterByType('original', this)">Originals</button>
-            <button class="filter-tab" onclick="filterByType('cover', this)">Covers</button>
-        </div>
-
-        <div class="toolbar">
-            <div class="sort-tool">
-                <label>Sort by: </label>
-                <select id="sort-select" onchange="sortSongs()">
-                    <option value="popular">Most Played 🔥</option>
-                    <option value="title">Title (A-Z)</option>
-                    <option value="artist">Artist (A-Z)</option>
-                </select>
-            </div>
-            <div class="view-tool">
-                <button id="btn-grid" class="active" onclick="changeView('grid')">Grid</button>
-                <button id="btn-list" onclick="changeView('list')">List</button>
-            </div>
-        </div>
-
-        <div class="grid-container">
-            <div class="songs-grid" id="songs-list-container"></div>
-        </div>
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <input type="text" class="search-input" placeholder="Search song or artist...">
+        <i class="fa-solid fa-chevron-down combo-arrow"></i>
+      </div>
+      <button class="icon-button search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <div id="song-view" class="view-section hidden">
-        <div class="top-bar-song">
-            <button class="header-back" onclick="navigateTo('menu-view')">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <div class="song-title-wrapper">
-                <h1 id="display-title">Loading...</h1>
-                <p id="display-artist" style="margin:0; font-size:13px; opacity:0.8; font-weight:500;">Artist</p>
-            </div>
-            <button class="theme-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+    <nav class="filter-navigation">
+      <button class="tab-btn active">All</button>
+      <button class="tab-btn">Favorites <i class="fa-regular fa-heart"></i></button>
+      <button class="tab-btn">Covers</button>
+      <button class="tab-btn">Originals</button>
+    </nav>
+
+    <div class="toolbar-section">
+      <!-- Dropdown Brutalista con su menú flotante integrado -->
+      <div class="dropdown-container">
+        <button class="dropdown-trigger">Sort by <i class="fa-solid fa-chevron-down"></i></button>
+        <!-- Cambiar a clase .open con JS para mostrar el menú flotante -->
+        <div class="dropdown-menu">
+          <div class="dropdown-item active">Most Played <i class="fa-solid fa-trophy"></i></div>
+          <div class="dropdown-item">Recently Added</div>
+          <div class="dropdown-item">Alphabetical (A-Z)</div>
         </div>
+      </div>
 
-        <div class="song-container" style="white-space: pre-wrap;">
-            <div id="lyrics-container"></div>
-
-            <div id="edit-container" class="hidden">
-                <textarea id="edit-lyrics" class="edit-textarea"></textarea>
-                <div class="edit-actions">
-                    <button onclick="saveEdit()" class="btn-save" style="margin-top: 0;">Save Changes</button>
-                    <button onclick="cancelEdit()" class="btn-cancel">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="control-bar" id="settings-panel">
-            <div class="control-group">
-                <span style="font-size:15px; font-weight:800;">Key:</span>
-                <div style="display:flex; gap:6px;">
-                    <button class="btn-small" onclick="transposeChords(-1)">-½</button>
-                    <button class="btn-small" onclick="transposeChords(1)">+½</button>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <span style="font-size:15px; font-weight:800;">Text:</span>
-                <div style="display:flex; gap:6px;">
-                    <button class="btn-small" onclick="changeFontSize(-2)">A-</button>
-                    <button class="btn-small" onclick="changeFontSize(2)">A+</button>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <span style="font-size:15px; font-weight:800;">Speed:</span>
-                <div style="display:flex; gap:6px; align-items:center;">
-                    <button class="btn-small" onclick="changeSpeed(-1)"><i class="fa-solid fa-minus"></i></button>
-                    <span id="speed-text" style="font-size:16px; font-weight:800; width:24px; text-align:center; color:#000;">3</span>
-                    <button class="btn-small" onclick="changeSpeed(1)"><i class="fa-solid fa-plus"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="sticky-fabs">
-            <button class="fab-trigger edit-actions" style="display:none; gap:0; margin:0;" id="song-actions-group">
-                </button>
-            <button class="fab-trigger fab-settings" onclick="document.getElementById('settings-panel').classList.toggle('open')" title="Ajustes de Afinación">
-                <i class="fa-solid fa-sliders"></i>
-            </button>
-            <button id="btn-play" class="fab-trigger btn-main" onclick="toggleScroll()" title="Iniciar Autoscroll">
-                <i class="fa-solid fa-play"></i>
-            </button>
-            <div style="display: flex; gap: 8px; position: fixed; top: 80px; right: 20px; z-index: 10;">
-                <button class="btn-small" onclick="toggleEditMode()" title="Edit Song" style="background:var(--card-bg); width:40px; height:40px;"><i class="fa-solid fa-pen" style="font-size:14px;"></i></button>
-                <button class="btn-small" onclick="deleteCurrentSong()" title="Delete" style="background:#e74c3c; color:white; width:40px; height:40px;"><i class="fa-solid fa-trash" style="font-size:14px;"></i></button>
-            </div>
-        </div>
+      <div class="view-toggle-group">
+        <button id="btn-grid" class="view-btn active">Grid <i class="fa-solid fa-table-cells-large"></i></button>
+        <button id="btn-list" class="view-btn">List <i class="fa-solid fa-list"></i></button>
+      </div>
     </div>
 
-    <div id="admin-view" class="view-section hidden">
-        <header>
-            <button class="header-back" onclick="navigateTo('menu-view')">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <h1>Admin Panel</h1>
-            <div style="width: 44px;"></div> </header>
-
-        <div class="admin-form">
-            <h2>Add New Song</h2>
-            <div class="field">
-                <label>Song Title</label>
-                <input type="text" id="admin-title" placeholder="e.g. Todavía">
+    <!-- El contenedor muta entre .songs-grid y .songs-list automáticamente -->
+    <main class="songs-container songs-grid">
+      
+      <!-- Tarjeta 1 (Original) -->
+      <div class="song-card">
+        <div class="card-body">
+          <div class="card-artwork original-bg">
+            <i class="fa-solid fa-cactus artwork-icon"></i>
+          </div>
+          <div class="card-details">
+            <div class="meta-row">
+              <span class="genre-badge original-badge">Original</span>
+              <span class="style-label">Song Style</span>
+              <button class="heart-btn"><i class="fa-regular fa-heart"></i></button>
             </div>
-            <div class="field">
-                <label>Artist Name</label>
-                <input type="text" id="admin-artist" placeholder="e.g. Armando Manzanero">
-            </div>
-            <div class="field">
-                <label>Song Type</label>
-                <div class="toggle-group">
-                    <label>
-                        <input type="radio" name="song-type" value="cover" checked>
-                        <span>Cover</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="song-type" value="original">
-                        <span>Original</span>
-                    </label>
-                </div>
-            </div>
-            <div class="field">
-                <label>Lyrics & Chords (Plain Text)</label>
-                <textarea id="admin-lyrics" placeholder="Paste your chords and lyrics here..."></textarea>
-            </div>
-            <button class="btn-save" onclick="saveNewSong()">Save Song to My Songbook</button>
+            <h2 class="card-title">Song Name</h2>
+            <p class="card-artist">Artist</p>
+          </div>
         </div>
+      </div>
+
+      <!-- Tarjeta 2 (Cover) -->
+      <div class="song-card">
+        <div class="card-body">
+          <div class="card-artwork cover-bg">
+            <i class="fa-solid fa-cactus artwork-icon"></i>
+          </div>
+          <div class="card-details">
+            <div class="meta-row">
+              <span class="genre-badge cover-badge">Cover</span>
+              <span class="style-label">Song Style</span>
+              <button class="heart-btn"><i class="fa-regular fa-heart"></i></button>
+            </div>
+            <h2 class="card-title">Song Name</h2>
+            <p class="card-artist">Artist</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FAB Fijo Abajo a la Derecha para Móvil -->
+    <button class="mobile-fab"><i class="fa-solid fa-plus"></i></button>
+  </div>
+
+  <!-- =========================================
+     PANTALLA 2: VIEW SONG (INTERNA CON ACORDES)
+     ========================================= -->
+  <div id="song-view" class="view-section hidden">
+    <header class="app-header">
+      <button class="icon-button"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="header-song-meta">
+        <h2>Quince Vueltas al Sol</h2>
+        <p>Armando Manzanero</p>
+      </div>
+      <button class="icon-button theme-btn"><i class="fa-solid fa-moon"></i></button>
+    </header>
+
+    <div class="action-trigger-bar">
+      <button class="action-pill">Edit <i class="fa-solid fa-pen"></i></button>
+      <button class="action-pill delete-pill">Delete <i class="fa-solid fa-trash"></i></button>
     </div>
 
-    <div id="chord-modal" class="modal-overlay" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 class="modal-title" id="modal-title">C</h2>
-            <div id="diagram-container"></div>
-            <button class="modal-close" onclick="closeModal()">Close</button>
-        </div>
+    <!-- Bloque de la cabecera interna de la canción -->
+    <div class="song-banner-card">
+      <div class="banner-artwork original-bg">
+        <i class="fa-solid fa-sun banner-icon"></i>
+      </div>
+      <div class="banner-info">
+        <span class="genre-badge original-badge">Original</span>
+        <span class="style-label">Song Style</span>
+        <h3>Quince Vueltas al Sol</h3>
+        <p>Artist</p>
+      </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Layout adaptable: en Desktop divide la pantalla en 2 columnas -->
+    <div class="song-workspace">
+      <!-- Contenedor del documento lírico -->
+      <!-- El JS inyectará la clase 'song-original' o 'song-cover' aquí -->
+      <div class="lyrics-canvas song-original">
+Intro
+<span class="chord">D</span>
+<span class="chord">G</span> <span class="chord">A</span> <span class="chord">F#m</span> <span class="chord">Bm</span> <span class="chord">Bm/A</span>
+<span class="chord">G</span> <span class="chord">A</span> <span class="chord">Bm</span>
+
+      <span class="chord">G</span>          <span class="chord">A</span>
+Le bajé las estrellas tal cual
+                 <span class="chord">F#m</span>        <span class="chord">Bm</span>
+Me entregué como dice el manual, ah-ah
+      </div>
+
+      <!-- Torre de Control Flotante de Ajustes -->
+      <!-- Agregar clase .open con JS en móvil para desplegar el panel completo -->
+      <div class="console-panel open">
+        <button class="console-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        
+        <div class="console-row">
+          <span class="console-label">Text Size</span>
+          <div class="console-buttons">
+            <button class="btn-micro">A-</button>
+            <button class="btn-micro">A+</button>
+          </div>
+        </div>
+
+        <div class="console-row">
+          <span class="console-label">Key</span>
+          <div class="console-buttons">
+            <button class="btn-micro">-½</button>
+            <button class="btn-micro">+½</button>
+          </div>
+        </div>
+
+        <div class="console-row">
+          <span class="console-label">Speed</span>
+          <div class="console-buttons">
+            <button class="btn-micro"><i class="fa-solid fa-minus"></i></button>
+            <span class="speed-value">3</span>
+            <button class="btn-micro"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <button class="console-play-btn"><i class="fa-solid fa-play"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+     PANTALLA 3: ADD SONG (FORMULARIO ADMIN)
+     ========================================= -->
+  <div id="admin-view" class="view-section hidden">
+    <header class="app-header">
+      <button class="icon-button"><i class="fa-solid fa-chevron-left"></i></button>
+      <h1 class="my-songbook">My Songbook</h1>
+      <button class="icon-button theme-btn"><i class="fa-solid fa-moon"></i></button>
+    </header>
+
+    <main class="form-container">
+      <h2 class="form-page-title">Add a Song</h2>
+      
+      <div class="input-group">
+        <label>Song Title</label>
+        <input type="text" class="brutal-input" placeholder="e.g. Todavía">
+      </div>
+
+      <div class="input-group">
+        <label>Artist Name</label>
+        <input type="text" class="brutal-input" placeholder="e.g. Armando Manzanero">
+      </div>
+
+      <div class="input-group">
+        <label>Song Type</label>
+        <div class="segmented-control">
+          <label class="segment-option">
+            <input type="radio" name="stype" checked>
+            <span class="segment-trigger">Cover</span>
+          </label>
+          <label class="segment-option">
+            <input type="radio" name="stype">
+            <span class="segment-trigger">Original</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Song Style</label>
+        <div class="search-input-wrap">
+          <select class="brutal-select">
+            <option>e.g. Regional</option>
+            <option>Bolerazo</option>
+            <option>Rock de Oro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Lyrics & Chords (Plain Text)</label>
+        <textarea class="brutal-textarea" placeholder="Paste your lyrics and chords here..."></textarea>
+      </div>
+
+      <button class="action-submit-btn">Save Song to My Songbook</button>
+    </main>
+  </div>
+
 </body>
 </html>
